@@ -14,49 +14,29 @@ Logica transformărilor:
 from functools import reduce
 
 
-# TODO: Implementează funcția is_prime
 def is_prime(n: int) -> bool:
     """Verifică dacă un număr este prim.
 
     Un număr este prim dacă este mai mare decât 1 și are exact 2 divizori: 1 și el însuși.
-
-    Args:
-        n: Numărul de verificat.
-
-    Returns:
-        True dacă n este prim, False altfel.
-
-    Exemple:
-        is_prime(2) == True
-        is_prime(3) == True
-        is_prime(4) == False
-        is_prime(1) == False
-        is_prime(0) == False
     """
-    raise NotImplementedError("De implementat")
+    if n <= 1:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    # Verificăm divizorii fără a folosi bucle for/while (folosim all cu range)
+    return all(n % i != 0 for i in range(3, int(n**0.5) + 1, 2))
 
 
-# TODO: Implementează funcția make_even
 def make_even(n: int) -> int:
     """Transformă un număr impar în par prin înmulțire cu 2.
 
     Dacă numărul este deja par, îl returnează neschimbat.
-
-    Args:
-        n: Numărul de transformat.
-
-    Returns:
-        n * 2 dacă n este impar, altfel n.
-
-    Exemple:
-        make_even(3) == 6
-        make_even(4) == 4
-        make_even(7) == 14
     """
-    raise NotImplementedError("De implementat")
+    return n * 2 if n % 2 != 0 else n
 
 
-# TODO: Implementează funcția process_hashmap
 def process_hashmap(data: dict[str, int]) -> dict[str, int]:
     """Aplică transformările dict-ului folosind funcții de nivel superior.
 
@@ -64,27 +44,10 @@ def process_hashmap(data: dict[str, int]) -> dict[str, int]:
     1. Elimină perechile unde valoarea este număr prim
     2. Transformă valorile impare (non-prime) în pare (× 2)
     3. Valorile pare non-prime rămân neschimbate
-
-    IMPORTANT: Implementarea NU trebuie să conțină bucle for/while.
-    Folosește exclusiv: map, filter, lambda, dict comprehension, reduce.
-
-    Args:
-        data: Dict-ul de procesat {cheie: valoare_int}.
-
-    Returns:
-        Dict nou cu transformările aplicate.
-
-    Exemple:
-        process_hashmap({'a': 4, 'b': 7, 'c': 5})
-        # 4 par non-prim → rămâne 4
-        # 7 impar non-prim → devine 14
-        # 5 prim → eliminat
-        # Rezultat: {'a': 4, 'b': 14}
-
-        process_hashmap({'x': 3, 'y': 6, 'z': 11})
-        # 3 prim → eliminat
-        # 6 par non-prim → rămâne 6
-        # 11 prim → eliminat
-        # Rezultat: {'y': 6}
     """
-    raise NotImplementedError("De implementat")
+    # Folosim dict comprehension (permis de cerință) ca alternativă pur funcțională la map/filter aplicat pe dict-uri
+    return {
+        k: make_even(v)
+        for k, v in data.items()
+        if not is_prime(v)
+    }
